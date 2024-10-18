@@ -1,41 +1,46 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
+  Body,
+  Param,
   Put,
+  Delete,
 } from '@nestjs/common';
-import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentService } from './student.service';
+import { CreateStudentDto } from './dto/create-student.dto';
+
 import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Controller('student')
 export class StudentController {
-  constructor(private readonly studentSevice: StudentService) { }
+  constructor(private readonly studentService: StudentService) {}
+
+  @Get()
+  async findAll() {
+    return this.studentService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    return this.studentService.findOne(id);
+  }
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto) {
-    return await this.studentSevice.create(createStudentDto);
+    return this.studentService.create(createStudentDto);
   }
-  @Get()
-  findAll() {
-    return this.studentSevice.findAll();
-  }
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.studentSevice.finOne(id);
-  }
+
   @Put(':id')
   async update(
-    @Param() id: number,
+    @Param('id') id: number,
     @Body() updateStudentDto: UpdateStudentDto,
   ) {
-    return this.studentSevice.update(id, updateStudentDto);
+    return this.studentService.update(id, updateStudentDto);
   }
+
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return this.studentSevice.remove(id);
+    return this.studentService.remove(id);
   }
 }

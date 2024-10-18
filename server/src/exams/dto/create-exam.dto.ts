@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsDate, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
+
 export class CreateExamDto {
   @IsString()
   @IsOptional()
@@ -9,7 +10,8 @@ export class CreateExamDto {
   @IsOptional()
   @Type(() => Date)
   examDate?: Date;
+
   @IsInt()
   @IsOptional()
-  classID: number;
+  classID: number; // Liên kết với bảng Class
 }

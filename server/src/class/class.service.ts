@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateClassDto } from './dto/create-class.dto';
-import { UpdateClassDto } from './dto/update-class.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateClassDto } from './dto/create-class.dto';
+import { UpdateClassDto } from './dto/update-class.dto';
 import { Class } from './entities/class.entity';
 
 @Injectable()
@@ -12,48 +12,36 @@ export class ClassService {
     private classRepository: Repository<Class>,
   ) {}
 
-  async create(
-    createClassDto: CreateClassDto,
-  ): Promise<{ message: string; class: Class }> {
-    const newClass = this.classRepository.create(createClassDto);
-    console.log(newClass.classID);
-
-    await this.classRepository.save(newClass);
-    console.log(newClass);
-    return { message: 'Class created successfully', class: newClass };
+  async create(createClassDto: CreateClassDto): Promise<Class> {
+    const classEntity = this.classRepository.create(createClassDto);
+    return this.classRepository.save(classEntity);
   }
 
-  findAll(): Promise<Class[]> {
-    return this.classRepository.find();
+  async findAll(): Promise<Class[]> {
+    return this.classRepository.find({ relations: ['students'] });
   }
 
-  async findOne(classID: number): Promise<{ message: string; class: Class }> {
-    const classFound = await this.classRepository.findOneBy({ classID });
-    if (!classFound) {
-      throw new NotFoundException(`Class with id ${classID} not found`);
+  async findOne(classID: number): Promise<Class> {
+    // return this.classRepository.findOneBy({classID: id });
+    const classEntity = await this.classRepository.findOne({
+      where: { classID: classID },
+      relations: ['students'], // Giả sử 'students' là tên mối quan hệ trong entity Class
+    });
+
+    if (!classEntity) {
+      throw new NotFoundException('Class not found');
     }
-    return { message: 'Class success', class: classFound };
+
+    return classEntity;
   }
 
-  async update(
-    classID: number,
-    updateClassDto: UpdateClassDto,
-  ): Promise<{ message: string; class: Class | void }> {
-    const updateclass = await this.classRepository.findOneBy({ classID });
-    if (!updateclass) {
-      throw new NotFoundException(`class width id ${classID} not found`);
-    }
-    Object.assign(updateclass, updateClassDto);
-
-    await this.classRepository.save(updateclass);
-    return { message: 'Class updated successfully', class: updateclass };
+  async update(id: number, updateClassDto: UpdateClassDto): Promise<Class> {
+    await this.classRepository.update({ classID: id }, updateClassDto);
+    console.log('upadate id:', id);
+    return this.findOne(id);
   }
 
-  async remove(id: number): Promise<{ message: string }> {
-    const classIndex = await this.classRepository.delete(id);
-    if (classIndex.affected === 0) {
-      throw new Error(`class with ${id} not fund`);
-    }
-    return { message: 'Class removed successfully' };
+  async remove(id: number): Promise<void> {
+    await this.classRepository.delete(id);
   }
 }

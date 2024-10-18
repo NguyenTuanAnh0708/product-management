@@ -5,7 +5,8 @@ import {
   Body,
   Param,
   Delete,
-  Put,
+  Patch,
+  NotFoundException,
 } from '@nestjs/common';
 import { ClassService } from './class.service';
 import { CreateClassDto } from './dto/create-class.dto';
@@ -15,22 +16,26 @@ import { UpdateClassDto } from './dto/update-class.dto';
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
 
-  @Post()
-  async create(@Body() createClassDto: CreateClassDto) {
-    return await this.classService.create(createClassDto);
-  }
-
   @Get()
   findAll() {
     return this.classService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.classService.findOne(id);
+  @Get(':classID')
+  async findOne(@Param('classID') classID: number) {
+    const classWithStudents = await this.classService.findOne(classID);
+    if (!classWithStudents) {
+      throw new NotFoundException('Class not found');
+    }
+    return classWithStudents;
   }
 
-  @Put(':id')
+  @Post()
+  create(@Body() createClassDto: CreateClassDto) {
+    return this.classService.create(createClassDto);
+  }
+
+  @Patch(':id')
   update(@Param('id') id: number, @Body() updateClassDto: UpdateClassDto) {
     return this.classService.update(id, updateClassDto);
   }

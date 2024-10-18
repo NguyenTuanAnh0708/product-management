@@ -10,10 +10,13 @@ import {
 import { ScoreService } from './score.service';
 import { CreateScoreDto } from './dto/create-scores.dto';
 import { UpdateScoreDto } from './dto/update-scores.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('score')
 @Controller('score')
 export class ScoreController {
-  constructor(private readonly scoreService: ScoreService) {}
+  constructor(private readonly scoreService: ScoreService) { }
 
   @Get()
   findAll() {

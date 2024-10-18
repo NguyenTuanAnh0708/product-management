@@ -41,8 +41,12 @@ export class StudentService {
     }));
   }
 
-  async findOne(id: number): Promise<Student> {
-    return this.studentRepository.findOneBy({ studentID: id });
+  async findOne(studentID: number): Promise<any> {
+    const student = await this.studentRepository.findOne({
+      where: { studentID },
+      relations: ['class', 'exams', 'scores.exam'],
+    });
+    return student;
   }
 
   async update(

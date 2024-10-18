@@ -10,10 +10,12 @@ import {
 import { ExamService } from './exam.service';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('exam')
 @Controller('exam')
 export class ExamController {
-  constructor(private readonly examService: ExamService) {}
+  constructor(private readonly examService: ExamService) { }
 
   @Get()
   findAll() {

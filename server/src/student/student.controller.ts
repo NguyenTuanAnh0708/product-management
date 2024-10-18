@@ -11,10 +11,12 @@ import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('student')
 @Controller('student')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) {}
+  constructor(private readonly studentService: StudentService) { }
 
   @Get()
   async findAll() {

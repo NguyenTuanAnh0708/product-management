@@ -84,6 +84,7 @@ import { StudentModule } from './student/student.module';
 import { ExamModule } from './exams/exam.module';
 import { ScoreModule } from './scores/score.module';
 import { Connection } from 'typeorm';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -103,6 +104,8 @@ import { Connection } from 'typeorm';
     ClassModule,
     ExamModule,
     ScoreModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+
   ],
   controllers: [
     AppController,

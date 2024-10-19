@@ -13,7 +13,7 @@ export class StudentService {
     private studentRepository: Repository<Student>,
     @InjectRepository(Class)
     private classRepository: Repository<Class>,
-  ) { }
+  ) {}
 
   async create(createStudentDto: CreateStudentDto): Promise<Student> {
     const student = this.studentRepository.create(createStudentDto);
@@ -46,6 +46,9 @@ export class StudentService {
       where: { studentID },
       relations: ['class', 'exams', 'scores.exam'],
     });
+    if (!student) {
+      throw new NotFoundException('student not found');
+    }
     return student;
   }
 
@@ -65,9 +68,7 @@ export class StudentService {
       throw new NotFoundException('Student not found');
     }
 
-
     Object.assign(student, updateStudentDto);
-
 
     if (updateStudentDto.classID) {
       const classEntity = await this.classRepository.findOneBy({
@@ -79,11 +80,15 @@ export class StudentService {
       student.class = classEntity;
     }
 
-
     return this.studentRepository.save(student);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ message: string }> {
+    const stutenEntity = await this.findOne(id);
+    if (!stutenEntity) {
+      throw new NotFoundException('student not found');
+    }
     await this.studentRepository.delete(id);
+    return { message: 'delete success' };
   }
 }

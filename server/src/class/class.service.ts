@@ -12,19 +12,23 @@ export class ClassService {
     private classRepository: Repository<Class>,
   ) {}
 
-  async create(createClassDto: CreateClassDto): Promise<Class> {
+  async create(
+    createClassDto: CreateClassDto,
+  ): Promise<{ class: Class; message: string }> {
     const classEntity = this.classRepository.create(createClassDto);
-    return this.classRepository.save(classEntity);
+
+    const savedClass = await this.classRepository.save(classEntity);
+    return { class: savedClass, message: 'Class created successfully' };
   }
 
   async findAll(): Promise<Class[]> {
     return this.classRepository.find({ relations: ['students'] });
   }
 
-  async findOne(classID: number): Promise<Class> {
+  async findOne(id: number): Promise<Class> {
     // return this.classRepository.findOneBy({classID: id });
     const classEntity = await this.classRepository.findOne({
-      where: { classID: classID },
+      where: { classID: id },
       relations: ['students'], // Giả sử 'students' là tên mối quan hệ trong entity Class
     });
 
@@ -35,13 +39,27 @@ export class ClassService {
     return classEntity;
   }
 
-  async update(id: number, updateClassDto: UpdateClassDto): Promise<Class> {
+  async update(
+    id: number,
+    updateClassDto: UpdateClassDto,
+  ): Promise<{ class: Class; message: string }> {
+    const classEntity = await this.findOne(id);
+    if (!classEntity) {
+      throw new NotFoundException('Class not found');
+    }
     await this.classRepository.update({ classID: id }, updateClassDto);
-    console.log('upadate id:', id);
-    return this.findOne(id);
+    // console.log('upadate id:', id);
+
+    const classUpdate = await this.findOne(id);
+    return { message: 'update class success', class: classUpdate };
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ message: string }> {
+    const classEntity = await this.findOne(id);
+    if (!classEntity) {
+      throw new NotFoundException('Class not found');
+    }
     await this.classRepository.delete(id);
+    return { message: 'delete success' };
   }
 }

@@ -16,7 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('student')
 @Controller('student')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) { }
+  constructor(private readonly studentService: StudentService) {}
 
   @Get()
   async findAll() {

@@ -2,12 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional } from 'class-validator';
 
 export class CreateClassDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Tên lớp học',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   className?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'teacher',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   teacher?: string;

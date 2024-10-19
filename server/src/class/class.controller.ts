@@ -7,6 +7,7 @@ import {
   Delete,
   Patch,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ClassService } from './class.service';
 import { CreateClassDto } from './dto/create-class.dto';
@@ -15,7 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('class')
 @Controller('class')
 export class ClassController {
-  constructor(private readonly classService: ClassService) { }
+  constructor(private readonly classService: ClassService) {}
 
   @Get()
   findAll() {
@@ -37,12 +38,15 @@ export class ClassController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateClassDto: UpdateClassDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateClassDto: UpdateClassDto,
+  ) {
     return this.classService.update(id, updateClassDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.classService.remove(id);
   }
 }

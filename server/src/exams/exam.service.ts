@@ -76,12 +76,25 @@ export class ExamService {
     return exam;
   }
 
-  async update(id: number, updateExamDto: UpdateExamDto): Promise<Exam> {
+  async update(
+    id: number,
+    updateExamDto: UpdateExamDto,
+  ): Promise<{ exam: Exam; message: string }> {
+    const examid = await this.findOne(id);
+    if (!examid) {
+      throw new NotFoundException('Class not found');
+    }
     await this.examRepository.update(id, updateExamDto);
-    return this.findOne(id);
+    const exams = await this.findOne(id);
+    return { message: 'update exam success', exam: exams };
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ message: string }> {
+    const examid = await this.findOne(id);
+    if (!examid) {
+      throw new NotFoundException('exam not found');
+    }
     await this.examRepository.delete(id);
+    return { message: 'delete success' };
   }
 }

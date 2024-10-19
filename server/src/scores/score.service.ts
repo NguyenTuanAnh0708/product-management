@@ -164,10 +164,14 @@ export class ScoreService {
   }
 
   async findOne(id: number): Promise<Score> {
-    return await this.scoreRepository.findOne({
+    const score = await this.scoreRepository.findOne({
       where: { scoreID: id },
       relations: ['student', 'exam'],
     });
+    if (!score) {
+      throw new NotFoundException('Score not found');
+    }
+    return score;
   }
 
   async update(id: number, updateScoreDto: UpdateScoreDto): Promise<Score> {
@@ -205,7 +209,12 @@ export class ScoreService {
     return this.scoreRepository.save(score);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ message: string }> {
+    const score = await this.findOne(id);
+    if (!score) {
+      throw new NotFoundException('score not found');
+    }
     await this.scoreRepository.delete(id);
+    return { message: 'delete success' };
   }
 }

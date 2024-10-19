@@ -85,6 +85,10 @@ import { ExamModule } from './exams/exam.module';
 import { ScoreModule } from './scores/score.module';
 import { Connection } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+// import { CategoryController } from './category/category.controller';
+import { CategoryService } from './category/category.service';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/entities/category.entities';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -94,7 +98,7 @@ import { ConfigModule } from '@nestjs/config';
       username: 'sa',
       password: 'test01',
       database: 'test02',
-      entities: [Student, Class, Exam, Score],
+      entities: [Student, Class, Exam, Score, Category],
       synchronize: true,
       options: {
         encrypt: false, // Đặt tùy chọn mã hóa (nếu cần)
@@ -104,16 +108,17 @@ import { ConfigModule } from '@nestjs/config';
     ClassModule,
     ExamModule,
     ScoreModule,
+    CategoryModule,
     ConfigModule.forRoot({ isGlobal: true }),
-
   ],
   controllers: [
     AppController,
+    // CategoryController,
   ],
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private connection: Connection) { }
+  constructor(private connection: Connection) {}
 
   async onModuleInit() {
     // Kiểm tra kết nối cơ sở dữ liệu

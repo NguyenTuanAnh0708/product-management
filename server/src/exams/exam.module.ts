@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExamService } from './exam.service';
 import { ExamController } from './exam.controller';
 import { Exam } from './entities/exams.entity';
-import { Class } from '../class/entities/class.entity'; // Import Class entity
-import { Score } from '../scores/entities/scores.entity'; // Import Score entity
+import { Class } from '../class/entities/class.entity';
+import { Score } from '../scores/entities/scores.entity';
 
 @Module({
   imports: [
@@ -13,4 +13,4 @@ import { Score } from '../scores/entities/scores.entity'; // Import Score entity
   controllers: [ExamController],
   providers: [ExamService],
 })
-export class ExamModule {}
+export class ExamModule { }

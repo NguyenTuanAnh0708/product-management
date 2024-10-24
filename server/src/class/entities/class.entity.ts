@@ -12,10 +12,10 @@ export class Class {
   @PrimaryGeneratedColumn()
   classID: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255, nullable: true })
   className: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255, nullable: true })
   teacher: string;
 
   @OneToMany(() => Student, (student) => student.class)

@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -18,7 +17,7 @@ export class Exam {
   @Column()
   examName: string;
 
-  @Column()
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   examDate: Date;
 
   // @Column()

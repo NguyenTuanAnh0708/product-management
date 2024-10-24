@@ -1,4 +1,3 @@
-
 import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,28 +15,28 @@ import { ExamModule } from './exams/exam.module';
 import { ScoreModule } from './scores/score.module';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/entities/category.entities';
-
+import { databaseConfig } from './configdatabase/database.provider';
 @Module({
   imports: [
+    TypeOrmModule.forRoot(databaseConfig),
 
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mssql',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: parseInt(configService.get<string>('PORT_SQL'), 10),
-        username: configService.get<string>('DATABASE_USER'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        entities: [Student, Class, Exam, Score, Category],
-        synchronize: true,
-        options: {
-          encrypt: false,
-        },
-      }),
-    }),
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     type: 'mssql',
+    //     host: configService.get<string>('DATABASE_HOST'),
+    //     port: parseInt(configService.get<string>('PORT_SQL'), 10),
+    //     username: configService.get<string>('DATABASE_USER'),
+    //     password: configService.get<string>('DATABASE_PASSWORD'),
+    //     database: configService.get<string>('DATABASE_NAME'),
+    //     entities: [Student, Class, Exam, Score, Category],
+    //     synchronize: true,
+    //     options: {
+    //       encrypt: false,
+    //     },
+    //   }),
+    // }),
     StudentModule,
     ClassModule,
     ExamModule,
@@ -49,7 +48,7 @@ import { Category } from './category/entities/category.entities';
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private dataSource: DataSource) { }
+  constructor(private dataSource: DataSource) {}
 
   async onModuleInit() {
     // Kiểm tra nếu kết nối đã được khởi tạo
